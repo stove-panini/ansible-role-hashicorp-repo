@@ -1,0 +1,11 @@
+---
+- name: Ensure HashiCorp GPG key is {{ hashicorp_repo_state }}
+  apt_key:
+    state: "{{ hashicorp_repo_state }}"
+    url: https://apt.releases.hashicorp.com/gpg
+
+- name: Ensure HashiCorp repo is {{ hashicorp_repo_state }}
+  apt_repository:
+    state: "{{ hashicorp_repo_state }}"
+    repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+    update_cache: true

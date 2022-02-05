@@ -1,0 +1,10 @@
+---
+- name: Assert that OS family has a supported repo
+  assert:
+    that:
+      - ansible_os_family in ['RedHat', 'Debian']
+    fail_msg: HashiCorp does not provide a repo for {{ ansible_distribution }}.
+    quiet: true
+
+- name: Setup repo for {{ ansible_distribution }}
+  include_tasks: "{{ ansible_os_family }}.yml"

@@ -1,0 +1,28 @@
+---
+- name: Set repo URL for RHEL
+  set_fact:
+    hashicorp_repo_rpm_distro: RHEL
+  when: ansible_distribution not in ['Fedora', 'Amazon']
+
+- name: Set repo URL for Fedora
+  set_fact:
+    hashicorp_repo_rpm_distro: fedora
+  when: ansible_distribution == 'Fedora'
+
+- name: Set repo URL for Amazon Linux
+  set_fact:
+    hashicorp_repo_rpm_distro: AmazonLinux
+  when: ansible_distribution == 'Amazon'
+
+- name: Ensure HashiCorp repo is {{ hashicorp_repo_state }}
+  yum_repository:
+    state: "{{ hashicorp_repo_state }}"
+    name: hashicorp
+    baseurl: "https://rpm.releases.hashicorp.com/{{ hashicorp_repo_rpm_distro }}/$releasever/$basearch/stable"
+    description: Hashicorp Stable - $basearch
+    enabled: true
+    gpgcheck: true
+    gpgkey: https://rpm.releases.hashicorp.com/gpg
+    owner: root
+    group: root
+    mode: 0644
